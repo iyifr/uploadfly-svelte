@@ -1,6 +1,19 @@
 {
 	"name": "uploadfly-svelte",
 	"version": "0.0.1",
+	"description": "Expovolouminously awesome file uploads for your svelte app.",
+	"author": {
+		"name": "Iyimide Adekile",
+		"url": "https://iyimide.vercel.app"
+	},
+	"sideEffects": true,
+	"keywords": [
+		"Svelte",
+		"SvelteKit",
+		"Javascript",
+		"UploadFly",
+		"File Uploads"
+	],
 	"scripts": {
 		"dev": "vite dev",
 		"build": "vite build && npm run package",
@@ -42,5 +55,8 @@
 	},
 	"svelte": "./dist/index.js",
 	"types": "./dist/index.d.ts",
-	"type": "module"
+	"type": "module",
+	"dependencies": {
+		"@uploadfly/js": "^1.0.7",
+	}
 }
