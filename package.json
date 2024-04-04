@@ -1,7 +1,7 @@
 {
 	"name": "uploadfly-svelte",
 	"version": "0.0.1",
-	"description": "Expovolouminously awesome file uploads for your svelte app.",
+	"description": "Expovoluminously awesome file uploads from your svelte app.",
 	"author": {
 		"name": "Iyimide Adekile",
 		"url": "https://iyimide.vercel.app"
@@ -57,6 +57,6 @@
 	"types": "./dist/index.d.ts",
 	"type": "module",
 	"dependencies": {
-		"@uploadfly/js": "^1.0.7",
+		"@uploadfly/js": "^1.0.7"
 	}
 }

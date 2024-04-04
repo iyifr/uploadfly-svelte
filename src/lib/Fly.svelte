@@ -1,36 +1,45 @@
 <script lang="ts">
-	export let apiKey
+	export let apiKey: string;
 	// export let multipleSelect: boolean;
-	export let customFileName: string | undefined = undefined;
 	import FilePicker from './FilePicker.svelte';
+	export let showAttribution = true;
 
-	let file: File;
+	let file: File[] | null = null;
 	import { CreateUploadflyClient } from '@uploadfly/js';
 
-	function handler(event: Event & { currentTarget: EventTarget & HTMLInputElement }) {
-		if (event?.currentTarget?.files?.[0]) {
-			file = event.currentTarget.files[0];
+	function upload() {
+		if (!file) {
+			throw new Error('No files found');
 		}
-	}
-
-	async function upload() {
 		const uploadfly = new CreateUploadflyClient(apiKey);
 
+		const uploadAFly = async (file: File) => {
+			await uploadfly.upload(file);
+		};
+
 		try {
-			const fly = await uploadfly.upload(file, {
-				filename: customFileName
-			});
-		} catch (error) {
-			console.error(error);
+			file?.map(async (item) => await uploadAFly(item).then(() => alert('Heck yeah')));
+		} catch (e) {
+			new Error(e as string | undefined);
 		}
 	}
 </script>
 
 <div>
-	<input type="file" on:change={handler} />
 	<button>
-		<slot>Upload</slot>
+		<slot>Upload the beauty</slot>
 	</button>
 
-	<FilePicker/>
+	<FilePicker multiple on:picked={(event) => (file = event.detail.files)} />
+
+	<button on:click={() => upload()}>Upload</button>
+	{#if showAttribution}
+		<pre>Powered by uploadfly</pre>
+	{/if}
 </div>
+
+<style>
+	:global([data-part='root']) {
+		margin-top: 2em;
+	}
+</style>
