@@ -2,19 +2,21 @@
 	import { getFilesFromDropEvent, getFilesFromInputEvent } from './utils.js';
 	import { createEventDispatcher, type EventDispatcher } from 'svelte';
 
-  interface $$Events {
-    picked: CustomEvent<{files: File[]}>
-  }
+	interface $$Events {
+		picked: CustomEvent<{ files: File[] }>;
+	}
 
-  type Dispatcher<TEvents extends Record<keyof TEvents, CustomEvent<any>>> = {
-    [Property in keyof TEvents]: TEvents[Property]['detail']
-  }
-  
+	type Dispatcher<TEvents extends Record<keyof TEvents, CustomEvent<any>>> = {
+		[Property in keyof TEvents]: TEvents[Property]['detail'];
+	};
+
+	const dispatch = createEventDispatcher<Dispatcher<$$Events>>();
+
+	export let hideDropzone: boolean = true;
 	export let multiple = true;
 	let files: File[] = [];
 
-	let dragging = false;
-	const dispatch = createEventDispatcher();
+	let dragging = true;
 
 	function startDragging() {
 		dragging = true;
@@ -33,32 +35,43 @@
 	};
 </script>
 
-<div id="root" data-part="root">
-	<div data-part="dropzone">
-		<label
-			class:dragging
-			on:drop|preventDefault={onFile(getFilesFromDropEvent)}
-			on:dragover|preventDefault={startDragging}
-			on:dragleave|preventDefault={stopDragging}
-		>
-			<slot {dragging}>
-				<div style="display: flex; flex-direction: column; align-items:center">
-					<span>Drag your files here</span>
-					<span style="display: block; cursor: pointer" data-part="trigger">Upload from device</span
-					>
-				</div>
-			</slot>
-			<input type="file" {multiple} on:input={onFile(getFilesFromInputEvent)} />
-		</label>
+{#if !hideDropzone}
+	<div id="root" data-part="root">
+		<div data-part="dropzone">
+			<label
+				on:drop|preventDefault={onFile(getFilesFromDropEvent)}
+				on:dragover|preventDefault={startDragging}
+				on:dragleave|preventDefault={stopDragging}
+			>
+				<slot {dragging}>
+					<div style="display: flex; flex-direction: column; align-items:center; padding: 20px;">
+						<span style="font-size: 18px;">Drag your files here or</span>
+						<span style="margin-top: 8px;" />
+						<slot>
+							<span data-part="upload">Upload from device</span>
+						</slot>
+					</div>
+				</slot>
+				<input type="file" {multiple} on:input={onFile(getFilesFromInputEvent)} />
+			</label>
+		</div>
 	</div>
-</div>
+{/if}
+
+{#if hideDropzone}
+	<label>
+		<slot>
+			<span data-part="upload">Upload file</span>
+		</slot>
+		<input type="file" {multiple} on:input={onFile(getFilesFromInputEvent)} />
+	</label>
+{/if}
 
 <div class="preview">
 	{#each files as file}
 		<span class="imgprev">{file.name}</span>
 	{/each}
 </div>
-
 
 <style>
 	.preview {
@@ -83,18 +96,13 @@
 	.imgprev {
 		background-color: whitesmoke;
 		opacity: 90;
-		padding: 0.8rem 1.6rem;
-		width: 120px;
+		padding: 1rem 0.4rem;
+		width: fit-content;
+		border-radius: 12px;
 	}
 
 	:global([data-part='root']) {
-		border: 2px black dotted;
 		width: 250px;
-		display: flex;
-		justify-items: center;
-		align-items: center;
-		flex-direction: column;
-		padding: 12px;
 		font-family:
 			system-ui,
 			-apple-system,
@@ -110,6 +118,8 @@
 	}
 
 	:global([data-part='dropzone']) {
+		border: 2px black dotted;
+		border-radius: 12px;
 		margin-top: 2px;
 	}
 
@@ -122,16 +132,5 @@
 		clip: rect(1px, 1px, 1px, 1px);
 		white-space: nowrap;
 		cursor: pointer;
-	}
-
-	:global([data-part='trigger']) {
-		background-color: rgb(39, 129, 39);
-		padding: 0.45em 0.8em;
-		display: inline-flex;
-		margin-block: 8px;
-		font-size: 14p;
-		border-radius: 4px;
-		color: white;
-		white-space: nowrap;
 	}
 </style>

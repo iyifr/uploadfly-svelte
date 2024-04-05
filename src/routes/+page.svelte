@@ -1,6 +1,16 @@
-<script>
+<script lang="ts">
 	// @ts-ignore
 	import { Fly } from '$lib/index.js';
+
+	let isUploaded: null | boolean = null;
+	let fileUrl
 </script>
 
-<Fly apiKey={import.meta.env.UPLOADFLY_API_KEY}>Upload your file</Fly>
+<Fly
+	multiple
+	on:uploaded={(e) =>
+		e.detail.success === true ? alert('Upload successful') : alert('Upload failed.')}
+/>
+
+
+<Fly on:uploaded={(e) => fileUrl = e.detail.resource?.[0]} />
