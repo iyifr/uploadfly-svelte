@@ -2,6 +2,8 @@
 	"name": "uploadfly-svelte",
 	"version": "0.0.2",
 	"description": "Expovoluminously awesome file uploads from your svelte app.",
+	"repository": {},
+	"homepage": "https://github.com/owner/project#readme",
 	"author": {
 		"name": "Iyimide Adekile",
 		"url": "https://iyimide.vercel.app"

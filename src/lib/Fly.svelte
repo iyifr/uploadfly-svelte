@@ -10,7 +10,7 @@
 	import { getHeightAndWidthFromDataUrl } from './utils.js';
 
 	interface $$Events {
-		uploaded: CustomEvent<{ success: boolean; resource: string[] | null, file: File }>;
+		uploaded: CustomEvent<{ success: boolean;  url: string | null; file: File  }>;
 	}
 
 	type Dispatcher<TEvents extends Record<keyof TEvents, CustomEvent<any>>> = {
@@ -24,7 +24,7 @@
 	const SLOTS = $$props.$$slots;
 
 	// Uploaded file URL
-	let urls: string[] = [];
+	let fileData: { url: string; file: File }[] = [];
 
 	const dispatch = createEventDispatcher<Dispatcher<$$Events>>();
 
@@ -38,26 +38,25 @@
 			alert('No Uploadfly Credential found');
 			return;
 		}
+		fileData = [];
 
 		const uploadfly = new CreateUploadflyClient(apiKey);
 		files.forEach(async (file) => {
 			try {
 				const fileAsDataURL = window.URL.createObjectURL(file);
 
-				getHeightAndWidthFromDataUrl(fileAsDataURL).then(async (dimensions: any) => {
-					const { width, height } = dimensions;
-					// We have to pass a width and max file size.
-					const res = await uploadfly.image.upload(file, {
-						width,
-						height,
-						maxFileSize: '10MB',
-						filename: file.name
-					});
-					urls = [...urls, res.data.url];
+				const dimensions: any = await getHeightAndWidthFromDataUrl(fileAsDataURL);
+				const { width, height } = dimensions;
+				const uploadResult = await uploadfly.image.upload(file, {
+					width,
+					height,
+					maxFileSize: '10MB',
+					filename: file.name
 				});
-				dispatch('uploaded', { success: true, resource: urls, file });
+				dispatch('uploaded', { success: true, url: uploadResult.data.url, file: file });
 			} catch (e) {
-				dispatch('uploaded', { success: false, resource: null, file });
+				dispatch('uploaded', { success: false, url: null, file });
+				return;
 			}
 		});
 	}
@@ -65,19 +64,11 @@
 
 <div>
 	{#if SLOTS}
-		<FilePicker
-			{multiple}
-			on:picked={(event) => upload(event.detail.files)}
-			{hideDropzone}
-		>
+		<FilePicker {multiple} on:picked={(event) => upload(event.detail.files)} {hideDropzone}>
 			<slot />
 		</FilePicker>
 	{:else}
-		<FilePicker
-			{multiple}
-			on:picked={(event) => upload(event.detail.files)}
-			{hideDropzone}
-		/>
+		<FilePicker {multiple} on:picked={(event) => upload(event.detail.files)} {hideDropzone} />
 	{/if}
 
 	{#if showAttribution}

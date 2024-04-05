@@ -3,7 +3,7 @@
 	import { Fly } from '$lib/index.js';
 
 	let isUploaded: null | boolean = null;
-	let fileUrl
+	let fileUrl;
 </script>
 
 <Fly
@@ -12,5 +12,4 @@
 		e.detail.success === true ? alert('Upload successful') : alert('Upload failed.')}
 />
 
-
-<Fly on:uploaded={(e) => fileUrl = e.detail.resource?.[0]} />
+<Fly on:uploaded={(e) => alert(e.detail.url)} />
