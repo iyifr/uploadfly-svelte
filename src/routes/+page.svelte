@@ -11,5 +11,3 @@
 	on:uploaded={(e) =>
 		e.detail.success === true ? alert('Upload successful') : alert('Upload failed.')}
 />
-
-<Fly on:uploaded={(e) => alert(e.detail.url)} />

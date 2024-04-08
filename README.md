@@ -1,8 +1,6 @@
-
 # UploadFly Svelte
-Simple component to upload files from your svelte apps to uploadfly. 
 
-
+Simple component to upload files from your svelte apps to uploadfly.
 
 ## Installation
 
@@ -16,16 +14,15 @@ Install with your preferred package manager.
   yarn add uploadfly-svelte
 ```
 
-    
 ## Environment Variables
+
 To use this component make sure you've signed up to [uploadfly](https://uploadlfy.co) and have your api key as an environment variable in `env.local`.
 
 Don't forget to prefix with Vite in development.
 `VITE_UPLOADFLY_API_KEY=****`
 
-
-
 ## Usage/Examples
+
 The fly component exports an `uploaded` event which tells us whether our file uploaded successfully
 
 ```javascript
@@ -34,11 +31,11 @@ The fly component exports an `uploaded` event which tells us whether our file up
 import Fly from 'uploadfly-svelte'
 
 function handle(e: Event) {
-    e.detail.success ? 
+    e.detail.success ?
     // Handle successful upload
     alert('Upload successful')
 
-    // handle error (show an error toast or display an alert) 
+    // handle error (show an error toast or display an alert)
     : alert('Upload failed')
 }
 
@@ -59,7 +56,8 @@ function handle(e: Event) {
 ```
 
 #### Multiple Files.
-Events are emitted for each individual file upload, so when uploading multiple files, use a reactive function to capture the urls and store them in your database (or whatever is required) 
+
+Events are emitted for each individual file upload, so when uploading multiple files, use a reactive function to capture the urls and store them in your database (or whatever is required)
 
 ```javascript
 <script lang="ts">
@@ -69,17 +67,19 @@ Events are emitted for each individual file upload, so when uploading multiple f
     $: updateUrls = (url) => fileUrls = [...fileUrls, url]
 </script>
 
-<Fly 
+<Fly
   multiple
-  on:uploaded={(e) => updateUrls(e.detail.url)} 
+  on:uploaded={(e) => updateUrls(e.detail.url)}
 />
 ```
 
 ### Image Previews
-Coming soon. 
 
-### 
+Coming soon.
 
+### Styling
+
+Coming soon.
 
 ## Author
 

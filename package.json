@@ -1,6 +1,6 @@
 {
 	"name": "uploadfly-svelte",
-	"version": "0.1.1",
+	"version": "0.1.2",
 	"description": "Expovoluminously awesome file uploads from your svelte app.",
 	"repository": {
 		"type": "git",
